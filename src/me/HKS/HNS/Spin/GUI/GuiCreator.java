@@ -21,12 +21,12 @@ public class GuiCreator {
      */
     public Inventory CreateInventory(String Name, int Slots) {
         Inventory inv;
-        inv = Bukkit.createInventory(null, getsize(Slots), Name);
+        inv = Bukkit.createInventory(null, getSize(Slots), Name);
         return inv;
     }
 
     // Creates the inventory and tests if it is possible to create
-    public int getsize(int Slots) {
+    public int getSize(int Slots) {
         int size = 9;
         while (true) {
             if (size > 54) {
