@@ -6,3 +6,14 @@ author: HNS_HKS
 commands:
         Spin:
             description: If you spin you spin
+            usage: /spin
+permissions:
+  spin.settings:
+    description: To open the settings GUI
+    default: op
+  spin.config:
+    description: To save and load the config
+    default: op
+  spin.help:
+    description: To schow the help
+    default: op
