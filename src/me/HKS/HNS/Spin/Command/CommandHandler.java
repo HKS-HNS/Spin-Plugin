@@ -1,5 +1,6 @@
 package me.HKS.HNS.Spin.Command;
 
+import me.HKS.HNS.Spin.Config;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.GUI.Spin.SpinGui;
 import org.bukkit.command.Command;
@@ -26,9 +27,21 @@ public class CommandHandler implements CommandExecutor {
         Player p = (Player) sender;
 
         // Tests if the Player has the permission to open the Settings GUI
-        if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.settings")) && (args[0].equalsIgnoreCase("settings") || args[0].equalsIgnoreCase("st")))) {
+        if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.settings")) && (args[0].equalsIgnoreCase("settings") || args[0].equalsIgnoreCase("set")))) {
             SaveItems saveItems = new SaveItems();
             saveItems.OpenInv(p, 0);
+        } else if (args.length >= 2 && ((p.isOp() || p.hasPermission("spin.config")) && (args[0].equalsIgnoreCase("config") || args[0].equalsIgnoreCase("cf")))) {
+            if (args[1].equalsIgnoreCase("load")) {
+                Config.loadConfig();
+            } else if (args[1].equalsIgnoreCase("save")) {
+                Config.saveConfig();
+            }
+        } else if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.help")) && (args[0].equalsIgnoreCase("help")))) {
+            p.sendMessage("§6§lHNS Spin Help:");
+            p.sendMessage("§6/spin - Opens the Spin GUI");
+            p.sendMessage("§6/spin settings - Opens the Settings GUI");
+            p.sendMessage("§6/spin config load - Loads the config");
+            p.sendMessage("§6/spin config save - Saves the config");
         } else { // If the Player doesn't have the permission to open the Settings GUI, it opens the Spin GUI
             SpinGui spinGui = new SpinGui();
             spinGui.OpenInv(p);
