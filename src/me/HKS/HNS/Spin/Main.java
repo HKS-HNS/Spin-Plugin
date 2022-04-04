@@ -1,15 +1,11 @@
 package me.HKS.HNS.Spin;
 
-import me.HKS.HNS.Spin.Command.CommandAutoComplet;
+import me.HKS.HNS.Spin.Command.CommandAutoComplete;
 import me.HKS.HNS.Spin.Command.CommandHandler;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.GUI.Spin.SpinGui;
 import me.HKS.HNS.Spin.Packet.SignPacket;
-import net.minecraft.server.v1_12_R1.BlockGrass;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +13,7 @@ import net.milkbowl.vault.economy.Economy;
 
 /**
  * Main.java - Main class of the spin plugin
- * @author HKS
+ * @author HKS_HNS
  */
 public class Main extends JavaPlugin {
     public static Main getInstance;
@@ -36,7 +32,7 @@ public class Main extends JavaPlugin {
         config.configRl(false);
         getInstance = this;
         getCommand("Spin").setExecutor(new CommandHandler());
-        getCommand("Spin").setTabCompleter(new CommandAutoComplet());
+        getCommand("Spin").setTabCompleter(new CommandAutoComplete());
         getServer().getPluginManager().registerEvents(new SaveItems(), this);
         getServer().getPluginManager().registerEvents(new SpinGui(), this);
         getServer().getPluginManager().registerEvents(new SignPacket(), this);
@@ -50,7 +46,7 @@ public class Main extends JavaPlugin {
 
     /**
      * @return True if the Vault dependency is found, otherwise false
-     * @author HKS
+     * @author HKS_HNS
      */
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -66,7 +62,7 @@ public class Main extends JavaPlugin {
 
     /**
      * @return The economy instance
-     * @author HKS
+     * @author HKS_HNS
      */
     public static Economy getEconomy() {
         return econ;
@@ -74,7 +70,7 @@ public class Main extends JavaPlugin {
 
     /**
      * @return This instance
-     * @author HKS
+     * @author HKS_HNS
      */
     public static Main getInstance() {
         return getInstance;
