@@ -1,0 +1,8 @@
+name: Spin-Gui
+version: 1.0
+api-version: 1.16
+main: me.HKS.HNS.Spin.Main
+author: HNS_HKS
+commands:
+        Spin:
+            description: If you spin you spin
