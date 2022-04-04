@@ -1,5 +1,6 @@
 package me.HKS.HNS.Spin.GUI.Spin;
 
+import me.HKS.HNS.Spin.Config;
 import me.HKS.HNS.Spin.GUI.GuiCreator;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.Main;
@@ -24,6 +25,10 @@ public class SpinGui implements Listener {
     public static List < Inventory > saveInventory = new ArrayList < > ();
     public static List < Inventory > saveInventory2 = new ArrayList < > ();
     public static HashMap < Inventory, Integer > random = new HashMap < > ();
+    public static String guiTitle = "§aDaily Spin";
+    public static ItemStack showcase = new ItemStack(Material.HOPPER);
+    public static ItemStack skip = new ItemStack(Material.NETHER_STAR);
+    public static boolean ignoreNoSpace = true;
 
     /**
      * Gets the random number and returns the itemStack and displays the item roll animation
@@ -37,61 +42,66 @@ public class SpinGui implements Listener {
             if (HasNoSpace(p, items2.get(randomNum))) {
                 return;
             }
-
             hasSpin.put(p.getUniqueId(), new Date());
         } else if (hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) > new Date().getTime()) {
             int hour = Math.round((hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) - (new Date().getTime())) / 3600000);
             int min = Math.round((hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) - (new Date().getTime())) / 60000 - (hour * 60));
-
-            // TODO: Messages to config
-            p.sendMessage("§cYou have already spined this day! come back in " + hour + " hours and " + min + " minutes!");
+            // TODO: Messages to config #AlreadySpun
+            p.sendMessage(Config.getMessage("AlreadySpun").replace("%hour%", String.valueOf(hour)).replace("%min%", String.valueOf(min)).replace("%prefix%", Config.getPrefix()));
             return;
         } else if (HasNoSpace(p, items2.get(randomNum))) {
             return;
         }
+        hasSpin.put(p.getUniqueId(), new Date());
         GuiCreator createInv = new GuiCreator();
-        // TODO: Name to config
-        Inventory inv = createInv.CreateInventory("§aDaily Spin ", 9 * 3);
+        // TODO: Name to config #Title
+        Inventory inv = createInv.CreateInventory(guiTitle, 9 * 3);
         saveInventory.add(inv);
         saveInventory2.add(inv);
         random.put(inv, randomNum);
         p.openInventory(inv);
-        // TODO: Names to config
-        inv.setItem(4, ItemStackRename(new ItemStack(Material.HOPPER), " "));
-        inv.setItem(22, ItemStackRename(new ItemStack(Material.NETHER_STAR), "§4>"));
+        // TODO: Names to config #ItemName #Skip
+        inv.setItem(4, showcase);
+        inv.setItem(22, skip);
 
         List < ItemStack > items = new ArrayList < > (items2);
         for (int i = -4; i < 1; i++) {
             inv.setItem(11 + i + 4, items.get(SetInSlotSub(items, items.size() - 1, -i)));
         }
         // The animation section:
-        (new BukkitRunnable() {
+        try {
 
-            int i = 0;
+            (new BukkitRunnable() {
 
-            public void run() {
-                if (!saveInventory.contains(inv) || !saveInventory2.contains(inv)) {
-                    giveItem(p, items2.get(randomNum));
-                    cancel();
+                int i = 0;
+
+                public void run() {
+                    if (!saveInventory.contains(inv) || !saveInventory2.contains(inv)) {
+                        giveItem(p, items2.get(randomNum));
+                        cancel();
+                    }
+
+                    if (i > (items.size() - 1) * 200) {
+                        giveItem(p, items2.get(randomNum));
+                        cancel();
+                    }
+
+                    int aa = (int)(this.i - (Math.floor(this.i / (items2.size()) * (items2.size()))));
+                    int v1 = (int)(this.i - (Math.floor(this.i / 5) * 5));
+                    inv.setItem(11 + v1, items.get(aa));
+                    if (v1 == 2 && aa == randomNum && this.i > items.size()) {
+                        p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                        giveItem(p, items2.get(randomNum));
+                        cancel();
+                    }
+
+                    this.i++;
                 }
-
-                if (i > (items.size() - 1) * 200) {
-                    giveItem(p, items2.get(randomNum));
-                    cancel();
-                }
-
-                int aa = (int)(this.i - (Math.floor(this.i / (items2.size()) * (items2.size()))));
-                int v1 = (int)(this.i - (Math.floor(this.i / 5) * 5));
-                inv.setItem(11 + v1, items.get(aa));
-                if (v1 == 2 && aa == randomNum && this.i > items.size()) {
-                    p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-                    giveItem(p, items2.get(randomNum));
-                    cancel();
-                }
-
-                this.i++;
-            }
-        }).runTaskTimer(Main.getInstance(), 0L, 1L);
+            }).runTaskTimer(Main.getInstance(), 0L, 1L);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error in the animation");
+        }
 
     }
 
@@ -123,15 +133,29 @@ public class SpinGui implements Listener {
      * @author HKS_HNS
      */
     public void giveItem(Player p, ItemStack item) {
-        // TODO: pls add config if you have time
+        // TODO: pls add Money to config if you have time
         ItemMeta itemMeta = item.getItemMeta();
         if (isMoney(item)) {
             List < String > lore = itemMeta.getLore();
             Economy a = Main.getEconomy();
-            a.depositPlayer(p, Integer.parseInt(lore.get(0).replace("§7Amount: ", "")));
-            // TODO: Message to config
-            p.sendMessage("§aYou have received §6" + lore.get(0).replace("§7Amount: ", "") + " §aMoney!");
-
+            // TODO: Message to config #WonMoney
+            List < String > loreReal = Config.getMoney().getItemMeta().getLore();
+            int loreID = 0;
+            for (int i = 0; i < loreReal.size(); i++) {
+                if (loreReal.get(i).contains("%amount%")) {
+                    loreID = i;
+                }
+            }
+            String lor = loreReal.get(loreID);
+            String[] split = lor.split("%amount%");
+            float money = 0f;
+            if (split.length == 1) {
+                money = Float.parseFloat(lore.get(loreID).replace(split[0], ""));
+            } else if (split.length == 2) {
+                money = Float.parseFloat(lore.get(loreID).replace(split[0], "").replace(split[1], ""));
+            }
+            a.depositPlayer(p, money);
+            p.sendMessage(Config.getMessage("WonMoney").replace("%balance%", money + "").replace("%prefix%", Config.getPrefix()));
         } else {
 
             p.getInventory().addItem(item);
@@ -160,10 +184,14 @@ public class SpinGui implements Listener {
             return false;
 
         ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta.hasLore() && itemMeta.hasDisplayName() && item.getType() == Material.GOLD_INGOT) {
+        ItemStack money = Config.getMoney();
+        if (itemMeta.hasLore() && itemMeta.hasDisplayName() && item.getType() == money.getType()) {
             List < String > lore = itemMeta.getLore();
             // TODO: Name and Lore to config
-            if (lore.get(0).contains("§7Amount: ") && itemMeta.getDisplayName().contains("§6Money")) {
+            String check = "";
+            check = money.getItemMeta().getLore().get(0).split("%amount%")[0];
+            System.out.println(check);
+            if (lore.get(0).contains(check) && itemMeta.getDisplayName().contains(money.getItemMeta().getDisplayName())) {
                 return true;
             }
         }
@@ -175,7 +203,7 @@ public class SpinGui implements Listener {
 
         if (saveInventory.contains(e.getInventory())) {
             e.setCancelled(true);
-            if (random.containsKey(e.getInventory()) && saveInventory2.contains(e.getInventory()) && e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.NETHER_STAR && e.getSlot() == 22) {
+            if (random.containsKey(e.getInventory()) && saveInventory2.contains(e.getInventory()) && e.getCurrentItem() != null && e.getCurrentItem().equals(skip) && e.getSlot() == 22) {
                 saveInventory2.remove(e.getInventory());
                 int randomNum = random.get(e.getInventory());
                 random.remove(e.getInventory());
@@ -203,8 +231,8 @@ public class SpinGui implements Listener {
         if (!isMoney(item)) {
 
             if (p.getInventory().firstEmpty() == -1) {
-                // TODO: Message to config
-                p.sendMessage("§4you don't have enough space in your inventory");
+                // TODO: Message to config #NoSpace
+                p.sendMessage(Config.getMessage("NoSpace").replace("%prefix%", Config.getPrefix()));
                 return true;
             }
         }

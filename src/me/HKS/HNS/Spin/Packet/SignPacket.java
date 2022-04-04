@@ -1,6 +1,7 @@
 package me.HKS.HNS.Spin.Packet;
 
 import io.netty.channel.*;
+import me.HKS.HNS.Spin.Config;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.Main;
 import net.minecraft.server.v1_12_R1.BlockPosition;
@@ -56,11 +57,16 @@ public class SignPacket implements Listener {
                     if (!amount.equals("") && isNummer(amount)) {
                         ItemStack item = new ItemStack(Material.GOLD_INGOT);
                         // Name the item money
+                        ItemMeta itemMetaMoney = Config.getMoney().getItemMeta();
                         ItemMeta itemMeta = item.getItemMeta();
-                        itemMeta.setDisplayName("§6Money");
+                        itemMeta.setDisplayName(itemMetaMoney.getDisplayName());
                         // Money lore
-                        List < String > lore = new ArrayList < > ();
-                        lore.add("§7Amount: " + Integer.parseInt(amount));
+
+                        List < String > lore = itemMetaMoney.getLore();
+                        for (int i = 0; i < lore.size(); i++) {
+                            lore.set(i, lore.get(i).replaceAll("%amount%", amount));
+                        }
+
                         itemMeta.setLore(lore);
                         item.setItemMeta(itemMeta);
                         items.add(item);
