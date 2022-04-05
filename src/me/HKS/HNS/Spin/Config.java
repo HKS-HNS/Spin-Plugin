@@ -2,7 +2,6 @@ package me.HKS.HNS.Spin;
 
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.GUI.Spin.SpinGui;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +22,8 @@ public class Config {
     private static HashMap < String, String > messages = new HashMap < String, String > ();
     private static String prefix = "§4§lHNS:";
     private static ItemStack money = new ItemStack(Material.GOLD_INGOT);
+    private static boolean StackIfMore = true;
+    private static float OnePer = 1000;
 
     /**
      *  Loads the config.yml
@@ -34,6 +35,8 @@ public class Config {
         if (!configFile.exists()) {
             Config.set("Spin.Prefix", String.valueOf(prefix));
             Config.set("Spin.Money.IgnoreNoSpace", true);
+            Config.set("Spin.Money.StackIfMore", StackIfMore);
+            Config.set("Spin.Money.OneItemPer", OnePer);
             Config.set("Spin.Money.Item.DisplayName", "§6Money");
             Config.set("Spin.Money.Item.Lore", Arrays.asList("§7You Won Money", "§7Amount: %amount%"));
             Config.set("Spin.Money.Item.Type", "GOLD_INGOT");
@@ -99,6 +102,12 @@ public class Config {
         if (config.contains("Spin.Money.IgnoreNoSpace")) {
             SpinGui.ignoreNoSpace = config.getBoolean("Spin.Money.IgnoreNoSpace");
         }
+        if (config.contains("Spin.Money.StackIfMore")) {
+            StackIfMore = config.getBoolean("Spin.Money.StackIfMore");
+        }
+        if (config.contains("Spin.Money.OneItemPer")) {
+            OnePer = config.getLong("Spin.Money.OneItemPer");
+        }
         if (config.contains("Spin.Money.Item.DisplayName")) {
             itemMeta.setDisplayName(config.getString("Spin.Money.Item.DisplayName"));
         }
@@ -144,6 +153,22 @@ public class Config {
         SpinGui.showcase.setItemMeta(itemMetaShowcase);
         SpinGui.skip.setItemMeta(itemMetaSkip);
 
+    }
+
+    /**
+     * @return the StackIfMore
+     * @author HKS_HNS
+     */
+    public static boolean isStackIfMore() {
+        return StackIfMore;
+    }
+
+    /**
+     * @return the max amount of money for the money stack
+     * @author HKS_HNS
+     */
+    public static float getOnePer() {
+        return OnePer;
     }
 
     /**

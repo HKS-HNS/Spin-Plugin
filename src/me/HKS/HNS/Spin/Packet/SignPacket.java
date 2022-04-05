@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SignPacket implements Listener {
@@ -69,6 +68,14 @@ public class SignPacket implements Listener {
 
                         itemMeta.setLore(lore);
                         item.setItemMeta(itemMeta);
+                        if (Config.isStackIfMore()) {
+                        int a = (int) Math.ceil((64 / (Config.getOnePer()*64) )* Float.parseFloat(amount));
+                        if (a > 64) {
+                            a = 64;
+                        }
+                            item.setAmount((int) a);
+
+                        }
                         items.add(item);
                     }
                     channelHandlerContext.channel().pipeline().remove(this);
