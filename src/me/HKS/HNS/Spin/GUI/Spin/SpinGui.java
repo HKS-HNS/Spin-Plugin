@@ -184,7 +184,7 @@ public class SpinGui implements Listener {
      */
     public Boolean isMoney(ItemStack item) {
 
-        if (!item.hasItemMeta())
+        if (!item.hasItemMeta() || !ignoreNoSpace)
             return false;
 
         ItemMeta itemMeta = item.getItemMeta();
@@ -194,7 +194,6 @@ public class SpinGui implements Listener {
             // TODO: Name and Lore to config
             String check = "";
             check = money.getItemMeta().getLore().get(0).split("%amount%")[0];
-            System.out.println(check);
             if (lore.get(0).contains(check) && itemMeta.getDisplayName().contains(money.getItemMeta().getDisplayName())) {
                 return true;
             }
