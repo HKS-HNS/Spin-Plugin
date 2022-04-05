@@ -3,6 +3,7 @@ package me.HKS.HNS.Spin.Command;
 import me.HKS.HNS.Spin.Config;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.GUI.Spin.SpinGui;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,12 +37,24 @@ public class CommandHandler implements CommandExecutor {
             } else if (args[1].equalsIgnoreCase("save")) {
                 Config.saveConfig();
             }
-        } else if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.help")) && (args[0].equalsIgnoreCase("help")))) {
+        }  else if (args.length >= 2 && ((p.isOp() || p.hasPermission("spin.reset")) && (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("rs")))) {
+            if (Bukkit.getPlayer(args[1]) != null) {
+                Player target = Bukkit.getPlayer(args[1]);
+                if (SpinGui.hasSpin.get(target.getUniqueId()) != null) {
+                    SpinGui.hasSpin.remove(target.getUniqueId());
+                    p.sendMessage(Config.getPrefix()+ " §aReset Spin for §e" + target.getName());
+                }
+            } else {
+                p.sendMessage("§4Player not found");
+            }
+
+    }else if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.help")) && (args[0].equalsIgnoreCase("help")))) {
             p.sendMessage("§6§lHNS Spin Help:");
             p.sendMessage("§6/spin - Opens the Spin GUI");
             p.sendMessage("§6/spin settings - Opens the Settings GUI");
             p.sendMessage("§6/spin config load - Loads the config");
             p.sendMessage("§6/spin config save - Saves the config");
+            p.sendMessage("§6/spin reset <player> - Resets the Spin time for the player");
         } else { // If the Player doesn't have the permission to open the Settings GUI, it opens the Spin GUI
             SpinGui spinGui = new SpinGui();
             spinGui.OpenInv(p);

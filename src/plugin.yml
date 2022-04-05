@@ -16,3 +16,6 @@ permissions:
   spin.help:
     description: To schow the help
     default: op
+  spin.reset:
+    description: To reset the spin time for the player
+    default: op
