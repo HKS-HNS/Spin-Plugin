@@ -139,7 +139,7 @@ public class SpinGui implements Listener {
     public void giveItem(Player p, ItemStack item) {
         // TODO: pls add Money to config if you have time
         ItemMeta itemMeta = item.getItemMeta();
-        if (isMoney(item)) {
+        if (isMoney(item, false)) {
             List < String > lore = itemMeta.getLore();
             Economy a = Main.getEconomy();
             // TODO: Message to config #WonMoney
@@ -182,9 +182,9 @@ public class SpinGui implements Listener {
      * @return
      * @author HKS_HNS
      */
-    public Boolean isMoney(ItemStack item) {
+    public Boolean isMoney(ItemStack item, boolean ignoreNoS) {
 
-        if (!item.hasItemMeta() || !ignoreNoSpace)
+        if (!item.hasItemMeta() || !ignoreNoS)
             return false;
 
         ItemMeta itemMeta = item.getItemMeta();
@@ -231,7 +231,7 @@ public class SpinGui implements Listener {
      * @author HKS_HNS
      */
     public boolean HasNoSpace(Player p, ItemStack item) {
-        if (!isMoney(item)) {
+        if (!isMoney(item, ignoreNoSpace)) {
 
             if (p.getInventory().firstEmpty() == -1) {
                 // TODO: Message to config #NoSpace
