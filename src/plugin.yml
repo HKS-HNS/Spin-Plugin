@@ -6,7 +6,6 @@ author: HNS_HKS
 commands:
         Spin:
             description: If you spin you spin
-            usage: /spin
 permissions:
   spin.settings:
     description: To open the settings GUI
