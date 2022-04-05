@@ -42,10 +42,10 @@ public class CommandHandler implements CommandExecutor {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (SpinGui.hasSpin.get(target.getUniqueId()) != null) {
                     SpinGui.hasSpin.remove(target.getUniqueId());
-                    p.sendMessage(Config.getPrefix()+ " §aReset Spin for §e" + target.getName());
+                    p.sendMessage(Config.getMessage("Reset").replace("%player%", target.getName()).replace("%prefix%", Config.getPrefix()));
                 }
             } else {
-                p.sendMessage("§4Player not found");
+                p.sendMessage(Config.getMessage("NoPlayer").replace("%prefix%", Config.getPrefix()).replace("%player%", args[1]));
             }
 
     }else if (args.length >= 1 && ((p.isOp() || p.hasPermission("spin.help")) && (args[0].equalsIgnoreCase("help")))) {

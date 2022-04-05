@@ -48,6 +48,10 @@ public class Config {
             Config.set("Spin.SpinGui.Messages.AlreadySpun", "%prefix% §cYou have already spun this day! come back in %hour% hours and %min% minutes!");
             Config.set("Spin.SpinGui.Messages.NoSpace", "%prefix% §4you don't have enough space in your inventory");
             Config.set("Spin.SpinGui.Messages.WonMoney", "%prefix% §aYou have received §6%balance% §aMoney!");
+            Config.set("Spin.SpinGui.Messages.NoItems", "%prefix% §cWe don't have enough items to spin please contact an admin!");
+            Config.set("Spin.Commands.Reset.NoPlayer", "%prefix% §4Player not found");
+            Config.set("Spin.Commands.Reset.Reset", "%prefix% §aReset Spin for §e%player%");
+
 
         }
 
@@ -149,6 +153,16 @@ public class Config {
         if (config.contains("Spin.SpinGui.Messages.WonMoney")) {
             messages.put("WonMoney", config.getString("Spin.SpinGui.Messages.WonMoney"));
         }
+        if (config.contains("Spin.SpinGui.Messages.NoItems")) {
+            messages.put("NoItems", config.getString("Spin.SpinGui.Messages.NoItems"));
+        }
+        if (config.contains("Spin.Commands.Reset.NoPlayer")) {
+            messages.put("NoPlayer", config.getString("Spin.Commands.Reset.NoPlayer"));
+        }
+        if (config.contains("Spin.Commands.Reset.Reset")) {
+            messages.put("Reset", config.getString("Spin.Commands.Reset.Reset"));
+        }
+
         money.setItemMeta(itemMeta);
         SpinGui.showcase.setItemMeta(itemMetaShowcase);
         SpinGui.skip.setItemMeta(itemMetaSkip);

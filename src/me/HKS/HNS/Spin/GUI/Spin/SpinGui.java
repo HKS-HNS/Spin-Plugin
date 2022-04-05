@@ -36,6 +36,10 @@ public class SpinGui implements Listener {
      */
     public void OpenInv(Player p) {
         List < ItemStack > items2 = new ArrayList < > (SaveItems.items);
+        if (items2.size() <= 3) {
+            p.sendMessage(Config.getMessage("NoItems").replace("%prefix%", Config.getPrefix()));
+            return;
+        }
         int randomNum = ThreadLocalRandom.current().nextInt(0, items2.size());
         // Tests if the player has already spun
         if (!hasSpin.containsKey(p.getUniqueId())) {
