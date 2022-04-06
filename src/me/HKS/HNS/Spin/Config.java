@@ -166,7 +166,6 @@ public class Config {
         money.setItemMeta(itemMeta);
         SpinGui.showcase.setItemMeta(itemMetaShowcase);
         SpinGui.skip.setItemMeta(itemMetaSkip);
-
     }
 
     /**

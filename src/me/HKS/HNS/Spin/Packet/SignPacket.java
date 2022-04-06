@@ -4,12 +4,11 @@ import io.netty.channel.*;
 import me.HKS.HNS.Spin.Config;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.Main;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.PacketPlayInUpdateSign;
-import net.minecraft.server.v1_12_R1.PacketPlayOutOpenSignEditor;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -58,7 +57,7 @@ public class SignPacket implements Listener {
                         // Name the item money
                         ItemMeta itemMetaMoney = Config.getMoney().getItemMeta();
                         ItemMeta itemMeta = item.getItemMeta();
-                        itemMeta.setDisplayName(itemMetaMoney.getDisplayName());
+                        itemMeta.setDisplayName(itemMetaMoney.getDisplayName().replace("%amount%", amount));
                         // Money lore
 
                         List < String > lore = itemMetaMoney.getLore();
@@ -76,6 +75,11 @@ public class SignPacket implements Listener {
                             item.setAmount((int) a);
 
                         }
+                        net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
+                        NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
+                        aMoney.set("hhh9h8uh8hMoneyinhiuh", new NBTTagString(amount));
+                        nmsMoney.setTag(aMoney);
+                        item = CraftItemStack.asBukkitCopy(nmsMoney);
                         items.add(item);
                     }
                     channelHandlerContext.channel().pipeline().remove(this);

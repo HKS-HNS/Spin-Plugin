@@ -5,8 +5,11 @@ import me.HKS.HNS.Spin.GUI.GuiCreator;
 import me.HKS.HNS.Spin.GUI.Settings.SaveItems;
 import me.HKS.HNS.Spin.Main;
 import net.milkbowl.vault.economy.Economy;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagString;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -138,28 +141,14 @@ public class SpinGui implements Listener {
      */
     public void giveItem(Player p, ItemStack item) {
         // TODO: pls add Money to config if you have time
-        ItemMeta itemMeta = item.getItemMeta();
-        if (isMoney(item, false)) {
-            List < String > lore = itemMeta.getLore();
+        if (isMoney(item, true)) {
             Economy a = Main.getEconomy();
             // TODO: Message to config #WonMoney
-            List < String > loreReal = Config.getMoney().getItemMeta().getLore();
-            int loreID = 0;
-            for (int i = 0; i < loreReal.size(); i++) {
-                if (loreReal.get(i).contains("%amount%")) {
-                    loreID = i;
-                }
-            }
-            String lor = loreReal.get(loreID);
-            String[] split = lor.split("%amount%");
-            float money = 0f;
-            if (split.length == 1) {
-                money = Float.parseFloat(lore.get(loreID).replace(split[0], ""));
-            } else if (split.length == 2) {
-                money = Float.parseFloat(lore.get(loreID).replace(split[0], "").replace(split[1], ""));
-            }
-            a.depositPlayer(p, money);
-            p.sendMessage(Config.getMessage("WonMoney").replace("%balance%", money + "").replace("%prefix%", Config.getPrefix()));
+            net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
+            NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
+                String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
+            a.depositPlayer(p, Double.parseDouble(amount));
+            p.sendMessage(Config.getMessage("WonMoney").replace("%balance%", amount + "").replace("%prefix%", Config.getPrefix()));
         } else {
 
             p.getInventory().addItem(item);
@@ -187,16 +176,22 @@ public class SpinGui implements Listener {
         if (!item.hasItemMeta() || !ignoreNoS)
             return false;
 
+
         ItemMeta itemMeta = item.getItemMeta();
         ItemStack money = Config.getMoney();
         if (itemMeta.hasLore() && itemMeta.hasDisplayName() && item.getType() == money.getType()) {
-            List < String > lore = itemMeta.getLore();
             // TODO: Name and Lore to config
-            String check = "";
-            check = money.getItemMeta().getLore().get(0).split("%amount%")[0];
-            if (lore.get(0).contains(check) && itemMeta.getDisplayName().contains(money.getItemMeta().getDisplayName())) {
+            net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
+            NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
+            try {
+               String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
                 return true;
             }
+            catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
         }
         return true;
     }
