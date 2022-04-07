@@ -76,32 +76,61 @@ public class SpinGui implements Listener {
             inv.setItem(11 + i + 4, items.get(SetInSlotSub(items, items.size() - 1, -i)));
         }
         // The animation section:
+        HashMap < Integer, Integer > SetItemsPlace = new HashMap < > ();
+        for (int i = 0; i < items.size(); i++) {
+            SetItemsPlace.put(i, i);
+        }
         try {
 
             (new BukkitRunnable() {
-
                 int i = 0;
-
+                HashMap < Integer, Integer > setItemsPlace = SetItemsPlace;
                 public void run() {
-                    if (!saveInventory.contains(inv) || !saveInventory2.contains(inv)) {
+
+                    if (!saveInventory.contains(inv)) {
                         giveItem(p, items2.get(randomNum));
                         cancel();
                     }
 
-                    if (i > (items.size() - 1) * 200) {
+                    for (int l = 0; l < setItemsPlace.size(); l++) {
+
+                        if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 0) {
+                            inv.setItem(11, items.get(l));
+                        } else if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 1) {
+                            inv.setItem(12, items.get(l));
+                        } else if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 2) {
+                            inv.setItem(13, items.get(l));
+                            if (l == randomNum && i >= ((items.size() - 1) * 3)) {
+                                System.out.println("Asd: " + i);
+                                p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                                giveItem(p, items2.get(randomNum));
+                                cancel();
+                            }
+                        } else if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 3) {
+                            inv.setItem(14, items.get(l));
+                        } else if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 4) {
+                            inv.setItem(15, items.get(l));
+
+                        }
+                        if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == setItemsPlace.size() - 1) {
+                            setItemsPlace.put((Integer) setItemsPlace.keySet().toArray()[l], 0);
+
+                        } else {
+                            setItemsPlace.put((Integer) setItemsPlace.keySet().toArray()[l], setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) + 1);
+                        }
+
+                    }
+                    if (!saveInventory2.contains(inv)) {
+                        inv.setItem(13 - 2, SaveItems.items.get(SetInSlotSub(SaveItems.items, randomNum, 2)));
+                        inv.setItem(13 - 1, SaveItems.items.get(SetInSlotSub(SaveItems.items, randomNum, 1)));
+                        inv.setItem(13, SaveItems.items.get(randomNum));
+                        inv.setItem(13 + 1, SaveItems.items.get(SetInSlotInc(SaveItems.items, randomNum, 1)));
+                        inv.setItem(13 + 2, SaveItems.items.get(SetInSlotInc(SaveItems.items, randomNum, 2)));
                         giveItem(p, items2.get(randomNum));
                         cancel();
                     }
 
-                    int aa = (int)(this.i - (Math.floor(this.i / (items2.size()) * (items2.size()))));
-                    int v1 = (int)(this.i - (Math.floor(this.i / 5) * 5));
-                    inv.setItem(11 + v1, items.get(aa));
-                    if (v1 == 2 && aa == randomNum && this.i > items.size()) {
-                        p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-                        giveItem(p, items2.get(randomNum));
-                        cancel();
-                    }
-
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                     this.i++;
                 }
             }).runTaskTimer(Main.getInstance(), 0L, 1L);
@@ -146,7 +175,7 @@ public class SpinGui implements Listener {
             // TODO: Message to config #WonMoney
             net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
             NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
-                String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
+            String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
             a.depositPlayer(p, Double.parseDouble(amount));
             p.sendMessage(Config.getMessage("WonMoney").replace("%balance%", amount + "").replace("%prefix%", Config.getPrefix()));
         } else {
@@ -176,7 +205,6 @@ public class SpinGui implements Listener {
         if (!item.hasItemMeta() || !ignoreNoS)
             return false;
 
-
         ItemMeta itemMeta = item.getItemMeta();
         ItemStack money = Config.getMoney();
         if (itemMeta.hasLore() && itemMeta.hasDisplayName() && item.getType() == money.getType()) {
@@ -184,16 +212,15 @@ public class SpinGui implements Listener {
             net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
             NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
             try {
-               String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
+                String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
 
         }
-        return true;
+        return false;
     }
 
     @EventHandler
