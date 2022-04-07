@@ -54,7 +54,6 @@ public class CommandHandler implements CommandExecutor {
                     p.sendMessage(Config.getMessage("Reset").replace("%player%", target.getName()).replace("%prefix%", Config.getPrefix()));
                 }
             } else {
-                //Pling
                 p.sendMessage(Config.getMessage("NoPlayer").replace("%prefix%", Config.getPrefix()).replace("%player%", args[1]));
             }
 
