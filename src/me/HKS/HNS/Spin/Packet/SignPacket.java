@@ -18,7 +18,6 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 
 public class SignPacket implements Listener {
-    // TODO: after config is done, add a configurable money item for the inv
 
     /**
      * Schedules the opening of the inventory after the sign packet is received

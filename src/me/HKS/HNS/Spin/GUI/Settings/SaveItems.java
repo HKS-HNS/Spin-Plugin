@@ -198,7 +198,6 @@ public class SaveItems implements Listener {
         if ((inv.getSize() - 9) * (page + 1) < items.size()) {
 
             inv.setItem(inv.getSize() - 1, SetItemName(new ItemStack(Material.ARROW), "§3Next"));
-            //negative = inv.getSize() - items.size() - 9;
 
             negative = (-items.size() + (inv.getSize() - 9) + ((inv.getSize() - 9) * page));
         }

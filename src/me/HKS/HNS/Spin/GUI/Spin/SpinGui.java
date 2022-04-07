@@ -53,7 +53,6 @@ public class SpinGui implements Listener {
         } else if (hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) > new Date().getTime()) {
             int hour = Math.round((hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) - (new Date().getTime())) / 3600000);
             int min = Math.round((hasSpin.get(p.getUniqueId()).getTime() + (1000 * 60 * 60 * 12) - (new Date().getTime())) / 60000 - (hour * 60));
-            // TODO: Messages to config #AlreadySpun
             p.sendMessage(Config.getMessage("AlreadySpun").replace("%hour%", String.valueOf(hour)).replace("%min%", String.valueOf(min)).replace("%prefix%", Config.getPrefix()));
             return;
         } else if (HasNoSpace(p, items2.get(randomNum))) {
@@ -61,13 +60,11 @@ public class SpinGui implements Listener {
         }
         hasSpin.put(p.getUniqueId(), new Date());
         GuiCreator createInv = new GuiCreator();
-        // TODO: Name to config #Title
         Inventory inv = createInv.CreateInventory(guiTitle, 9 * 3);
         saveInventory.add(inv);
         saveInventory2.add(inv);
         random.put(inv, randomNum);
         p.openInventory(inv);
-        // TODO: Names to config #ItemName #Skip
         inv.setItem(4, showcase);
         inv.setItem(22, skip);
 
@@ -169,10 +166,8 @@ public class SpinGui implements Listener {
      * @author HKS_HNS
      */
     public void giveItem(Player p, ItemStack item) {
-        // TODO: pls add Money to config if you have time
         if (isMoney(item, true)) {
             Economy a = Main.getEconomy();
-            // TODO: Message to config #WonMoney
             net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
             NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
             String amount = aMoney.getString("hhh9h8uh8hMoneyinhiuh");
@@ -208,7 +203,6 @@ public class SpinGui implements Listener {
         ItemMeta itemMeta = item.getItemMeta();
         ItemStack money = Config.getMoney();
         if (itemMeta.hasLore() && itemMeta.hasDisplayName() && item.getType() == money.getType()) {
-            // TODO: Name and Lore to config
             net.minecraft.server.v1_12_R1.ItemStack nmsMoney = CraftItemStack.asNMSCopy(item);
             NBTTagCompound aMoney = (nmsMoney.hasTag()) ? nmsMoney.getTag() : new NBTTagCompound();
             try {
@@ -256,7 +250,6 @@ public class SpinGui implements Listener {
         if (!isMoney(item, ignoreNoSpace)) {
 
             if (p.getInventory().firstEmpty() == -1) {
-                // TODO: Message to config #NoSpace
                 p.sendMessage(Config.getMessage("NoSpace").replace("%prefix%", Config.getPrefix()));
                 return true;
             }
