@@ -80,12 +80,15 @@ public class SpinGui implements Listener {
         try {
 
             (new BukkitRunnable() {
+                boolean isHasGiven = false;
                 int i = 0;
                 HashMap < Integer, Integer > setItemsPlace = SetItemsPlace;
                 public void run() {
 
                     if (!saveInventory.contains(inv)) {
+                        if (isHasGiven == false) {
                         giveItem(p, items2.get(randomNum));
+                        isHasGiven = true; }
                         cancel();
                     }
 
@@ -100,7 +103,9 @@ public class SpinGui implements Listener {
                             if (l == randomNum && i >= ((items.size() - 1) * 3)) {
                                 System.out.println("Asd: " + i);
                                 p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-                                giveItem(p, items2.get(randomNum));
+                                if (isHasGiven == false) {
+                                    giveItem(p, items2.get(randomNum));
+                                    isHasGiven = true; }
                                 cancel();
                             }
                         } else if (setItemsPlace.get(setItemsPlace.keySet().toArray()[l]) == 3) {
@@ -123,7 +128,9 @@ public class SpinGui implements Listener {
                         inv.setItem(13, SaveItems.items.get(randomNum));
                         inv.setItem(13 + 1, SaveItems.items.get(SetInSlotInc(SaveItems.items, randomNum, 1)));
                         inv.setItem(13 + 2, SaveItems.items.get(SetInSlotInc(SaveItems.items, randomNum, 2)));
-                        giveItem(p, items2.get(randomNum));
+                        if (isHasGiven == false) {
+                            giveItem(p, items2.get(randomNum));
+                            isHasGiven = true; }
                         cancel();
                     }
 
